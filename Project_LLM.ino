@@ -25,11 +25,11 @@ unsigned long lastChangeRelay1 = 0;
 unsigned long lastChangeRelay2 = 0;
 unsigned long lastChangeRelay3 = 0;
 unsigned long lastChangeRelay4 = 0;
-const unsigned long minInterval = 60000;
+const unsigned long minInterval = 2000;
 
 void setup() {
   connection.begin();
-  Serial.begin(9600);
+  Serial.begin(115200);
   delay(1000);
   pinMode(Relay1, OUTPUT);
   pinMode(Relay2, OUTPUT);
