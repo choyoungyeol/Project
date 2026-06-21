@@ -51,7 +51,9 @@ void loop() {
   String Temp = resp1.substring(third + 1, length);
   delay(2000);
 
-  outString = String(ch) + "," + String(VWC) + "," + String(Temp) + "," + String(air_temperature) + "," + String(air_humidity) + "," + String(air_dewpoint) + "," + String(EC);
+  //outString = String(ch) + "," + String(VWC) + "," + String(Temp) + "," + String(air_temperature) + "," + String(air_humidity) + "," + String(air_dewpoint) + "," + String(EC);
+  // 예시: outString 구성을 이렇게 변경
+  outString = "{\"ch\":\"" + ch + "\",\"vwc\":" + VWC + ",\"temp\":" + Temp + ",\"air_temperature\":" + air_temperature + ",\"air_humidity\":" + air_humidity + ",\"air_dewpoint\":" + air_dewpoint + ",\"EC\":" + EC +"}";
 
   Serial.println(outString);
   delay(2000);
