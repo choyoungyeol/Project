@@ -20,9 +20,12 @@ SDISerial connection(WaterPin);
 char* resp;
 String outString = "";
 
-// 아두이노 코드 수정 예시
-unsigned long lastChangeTime = 0;
-const unsigned long minInterval = 60000;  // 최소 1분은 상태 유지 (60초)
+// [전역 변수] loop() 밖에 선언해야 값이 유지됩니다.
+unsigned long lastChangeRelay1 = 0;
+unsigned long lastChangeRelay2 = 0;
+unsigned long lastChangeRelay3 = 0;
+unsigned long lastChangeRelay4 = 0;
+const unsigned long minInterval = 60000;
 
 void setup() {
   connection.begin();
@@ -37,41 +40,34 @@ void setup() {
 void loop() {
   if (Serial.available()) {
     char c = Serial.read();
-    unsigned long currentTime = millis();
+    unsigned long currentTime = millis();  // 여기서 현재 시간 확인
 
-    // 마지막 제어 후 일정 시간이 지났는지 확인
-    if (currentTime - lastChangeTime > minInterval) {
-      if (c == 'a') {
-        digitalWrite(Relay1, HIGH);
-        lastChangeTime = currentTime;
+    // Relay1 (a, b)
+    if (c == 'a' || c == 'b') {
+      if (currentTime - lastChangeRelay1 >= minInterval) {
+        digitalWrite(Relay1, (c == 'a') ? HIGH : LOW);
+        lastChangeRelay1 = currentTime;
       }
-      if (c == 'b') {
-        digitalWrite(Relay1, LOW);
-        lastChangeTime = currentTime;
+    }
+    // Relay2 (c, d)
+    else if (c == 'c' || c == 'd') {
+      if (currentTime - lastChangeRelay2 >= minInterval) {
+        digitalWrite(Relay2, (c == 'c') ? HIGH : LOW);
+        lastChangeRelay2 = currentTime;
       }
-      if (c == 'c') {
-        digitalWrite(Relay2, HIGH);
-        lastChangeTime = currentTime;
+    }
+    // Relay3 (e, f)
+    else if (c == 'e' || c == 'f') {
+      if (currentTime - lastChangeRelay3 >= minInterval) {
+        digitalWrite(Relay3, (c == 'e') ? HIGH : LOW);
+        lastChangeRelay3 = currentTime;
       }
-      if (c == 'd') {
-        digitalWrite(Relay2, LOW);
-        lastChangeTime = currentTime;
-      }
-      if (c == 'e') {
-        digitalWrite(Relay3, HIGH);
-        lastChangeTime = currentTime;
-      }
-      if (c == 'f') {
-        digitalWrite(Relay3, LOW);
-        lastChangeTime = currentTime;
-      }
-      if (c == 'g') {
-        digitalWrite(Relay4, HIGH);
-        lastChangeTime = currentTime;
-      }
-      if (c == 'h') {
-        digitalWrite(Relay4, LOW);
-        lastChangeTime = currentTime;
+    }
+    // Relay4 (g, h)
+    else if (c == 'g' || c == 'h') {
+      if (currentTime - lastChangeRelay4 >= minInterval) {
+        digitalWrite(Relay4, (c == 'g') ? HIGH : LOW);
+        lastChangeRelay4 = currentTime;
       }
     }
   }
