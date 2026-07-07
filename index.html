@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>센서 실시간 모니터링</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+    <style>
+        body { font-family: sans-serif; background-color: #f4f7f6; padding: 20px; }
+        /* 그리드 배치로 노드별 카드 정렬 */
+        #container { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); 
+            gap: 20px; 
+        }
+        .node-card { 
+            background: white; 
+            padding: 20px; 
+            border-radius: 12px; 
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1); 
+        }
+        .data-row { margin: 10px 0; font-size: 1.1em; }
+    </style>
+</head>
+<body>
+    <h1>센서 실시간 모니터링</h1>
+    <div id="container"></div> <script>
+        const socket = io();
+        const container = document.getElementById('container');
+
+        socket.on('sensor_data', function(node) {
+            // 노드 ID별 고유 ID 생성 (예: node-11, node-12...)
+            let cardId = "node-" + node.nodeID;
+            let card = document.getElementById(cardId);
+
+            // 해당 ID의 카드가 없으면 새로 생성
+            if (!card) {
+                card = document.createElement('div');
+                card.id = cardId;
+                card.className = 'node-card';
+                container.appendChild(card);
+            }
+
+            // 해당 카드의 내용만 갱신
+            card.innerHTML = `
+                <h3>Node ID: ${node.nodeID}</h3>
+                <div class="data-row">수분: <b>${node.VWC} %</b></div>
+                <div class="data-row">토양온도: <b>${node.Temp} °C</b></div>
+                <div class="data-row">기온: <b>${node.air_temp} °C</b></div>
+                <div class="data-row">습도: <b>${node.air_hum} %</b></div>
+                <div class="data-row">EC: <b>${node.EC} dS/m</b></div>
+                <div class="data-row">릴레이: <b>${node.relay == "1" ? "ON" : "OFF"}</b></div>
+            `;
+        });
+    </script>
+</body>
+</html>
